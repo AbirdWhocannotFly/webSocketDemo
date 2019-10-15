@@ -24,9 +24,12 @@ public class MyWebSocketClientTest {
         }
         // 往websocket服务端发送数据
         myClient.send("客户端发送了一条消息。。");
-        while (true){
-
+        int times = 0;
+        while (times<30){
+            Thread.sleep(1000);
+            times++;
         }
+        myClient.close();
     }
 
 }

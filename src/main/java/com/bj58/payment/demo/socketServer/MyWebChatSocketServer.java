@@ -2,10 +2,12 @@ package com.bj58.payment.demo.socketServer;
 
 import com.bj58.payment.demo.entity.ChatSocketMsg;
 import com.bj58.payment.demo.util.ChatDecoder;
+import com.bj58.payment.demo.util.HttpSessionConfigurator;
 import com.bj58.payment.demo.util.WebSocketMapUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpSession;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
@@ -16,7 +18,7 @@ import java.io.IOException;
  * @date 2019/10/9.
  * ws://[Server 端 IP 或域名]:[Server 端口]/项目名/testChat/userid
  */
-@ServerEndpoint(value = "/testChat/{userid}",decoders = {ChatDecoder.class})
+@ServerEndpoint(value = "/testChat/{userid}",decoders = {ChatDecoder.class},configurator = HttpSessionConfigurator.class)
 @Component
 @Slf4j
 public class MyWebChatSocketServer {
@@ -30,10 +32,12 @@ public class MyWebChatSocketServer {
      */
 
     @OnOpen
-    public void onOpen(@PathParam("userid") String userid ,Session session) {
+    public void onOpen(@PathParam("userid") String userid ,Session session,EndpointConfig config) {
         this.session = session;
         this.userid = userid;
-        log.info("onOpen userid:{},sessionId：{}", userid, session.getId());
+        HttpSession httpSession= (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
+        String userName = (String)httpSession.getAttribute("userName");
+        log.info("onOpen userid:{},userName:{},sessionId：{}", userid,userName, session.getId());
         WebSocketMapUtil.putChat(userid, this);
     }
     /**

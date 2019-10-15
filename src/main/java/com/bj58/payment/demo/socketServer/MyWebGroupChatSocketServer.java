@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  * @author yangguang14
  * @date 2019/10/9.
- * ws://[Server 端 IP 或域名]:[Server 端口]/项目名/testChat/userid
+ * ws://[Server 端 IP 或域名]:[Server 端口]/项目名/testChatGroup/groupid
  */
 @ServerEndpoint(value = "/testChatGroup/{groupid}")
 @Component
